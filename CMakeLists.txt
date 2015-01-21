@@ -1,0 +1,50 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
+PROJECT("sketch_modeling")
+
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
+
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtOpenGL QtXml REQUIRED)
+SET(CORELIBS ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTXML_LIBRARY})
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+
+FIND_PACKAGE(GLUT)
+FIND_PACKAGE(OpenGL)
+FIND_PACKAGE(QGLViewer REQUIRED)
+INCLUDE_DIRECTORIES(${QGLVIEWER_INCLUDE_DIR})
+SET(CORELIBS ${CORELIBS} ${QGLVIEWER_LIBRARY} ${GLUT_LIBRARY} ${OPENGL_LIBRARY})
+
+FIND_PACKAGE(OpenCV REQUIRED)
+SET(CORELIBS ${CORELIBS}  ${OpenCV_LIBS})
+
+FIND_PACKAGE(Armadillo REQUIRED)
+INCLUDE_DIRECTORIES(${ARMADILLO_INCLUDE_DIRS})
+SET(CORELIBS ${CORELIBS} ${ARMADILLO_LIBRARIES})
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/sketch_modeling_core)
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+
+SET(sketch_modeling_SOURCES 
+    main.cpp 
+    view.cpp
+    Matching.cpp
+    DrawPrimitives.cpp
+    opts.cpp
+    Events.cpp
+    my_qlabel.cpp
+    snapping.cpp)
+SET(sketch_modeling_HEADERS my_qlabel.h snapping.h)
+SET(sketch_modeling_FORMS snapping.ui)
+SET(sketch_modeling_RESOURCES snapping.qrc)
+
+QT4_WRAP_CPP(sketch_modeling_HEADERS_MOC ${sketch_modeling_HEADERS})
+QT4_WRAP_UI(sketch_modeling_FORMS_HEADERS ${sketch_modeling_FORMS})
+QT4_ADD_RESOURCES(sketch_modeling_RESOURCES_RCC ${sketch_modeling_RESOURCES})
+
+ADD_EXECUTABLE(sketch_modeling
+  ${sketch_modeling_SOURCES}
+  ${sketch_modeling_HEADERS_MOC}
+  ${sketch_modeling_FORMS_HEADERS}
+  ${sketch_modeling_RESOURCES_RCC})
+TARGET_LINK_LIBRARIES(sketch_modeling ${CORELIBS})

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="snapping">
+      <file>forward.png</file>
+      <file>folder.png</file>
+      <file>sphere.png</file>
+      <file>cylinder.png</file>
+      <file>cone.png</file>
+      <file>design.png</file>
+    </qresource>
+</RCC>
